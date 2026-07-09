@@ -4,7 +4,7 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 
 export default tseslint.config(
   {
-    ignores: ['build/', 'node_modules/'],
+    ignores: ['dist/', 'node_modules/', 'generated/'],
   },
 
   // Enable the recommended ESLint rules for JavaScript
@@ -23,11 +23,18 @@ export default tseslint.config(
       },
     },
     rules: {
-      '@typescript-eslint/no-floating-promises': 'error', // Ensure that promises are handled properly to avoid unhandled rejections
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/no-explicit-any': 'error',
+      'no-console': 'warn',
 
-      '@typescript-eslint/no-explicit-any': 'error', // Ensure type safety by preventing the use of 'any'
-
-      'no-console': 'warn', // Emit a warning to avoid forgotten console.logs in production
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
     },
   },
 
