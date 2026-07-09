@@ -1,9 +1,12 @@
 {
   "name": "refund-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "API desenvolvida para um sistema de reembolso",
   "main": "src/server.ts",
   "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
     "dev": "tsx watch src/server.ts"
   },
   "repository": {
@@ -13,7 +16,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/jpfreitas-dev/refund-api/issues"
   },
