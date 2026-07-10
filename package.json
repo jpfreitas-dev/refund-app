@@ -34,6 +34,7 @@
   "dependencies": {
     "@prisma/adapter-better-sqlite3": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "bcrypt": "^5.1.1",
     "better-sqlite3": "^12.11.1",
     "cors": "^2.8.5",
     "dotenv": "^17.4.2",
@@ -43,6 +44,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/bcrypt": "^5.0.2",
     "@types/better-sqlite3": "^7.6.13",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
@@ -56,5 +58,12 @@
     "tsx": "^4.19.2",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.63.0"
+  },
+  "allowScripts": {
+    "bcrypt@5.1.1": true,
+    "@prisma/engines@7.8.0": true,
+    "prisma@7.8.0": true,
+    "better-sqlite3@12.11.1": true,
+    "esbuild@0.28.1": true
   }
 }
