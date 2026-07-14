@@ -6,9 +6,12 @@ import { AppError } from '@/utils/AppError';
 import { hash } from 'bcrypt';
 
 class UsersController {
-  async createUser(request: Request, response: Response) {
+  async create(request: Request, response: Response) {
     const bodySchema = z.object({
-      name: z.string().trim().min(1, { message: 'Name is required' }),
+      name: z
+        .string()
+        .trim()
+        .min(3, { message: 'Name must be at least 3 characters long' }),
       email: z
         .string()
         .trim()
@@ -20,6 +23,7 @@ class UsersController {
         .min(6, { message: 'Password must be at least 6 characters long' }),
       role: z
         .enum([UserRole.employee, UserRole.manager])
+        .optional()
         .default(UserRole.employee),
     });
 
