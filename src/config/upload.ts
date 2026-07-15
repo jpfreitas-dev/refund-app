@@ -11,7 +11,7 @@ const ACCEPTED_FILE_TYPES = [
   'image/jpeg',
   'image/jpg',
   'image/png',
-  // 'application/pdf',
+  'application/pdf',
 ];
 
 const MULTER = {
