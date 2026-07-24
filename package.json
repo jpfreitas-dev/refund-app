@@ -1,73 +1,27 @@
 {
-  "name": "refund-api",
-  "version": "1.0.0",
-  "description": "API desenvolvida para um sistema de reembolso",
-  "main": "src/server.ts",
+  "name": "refund-app",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "scripts": {
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "format": "prettier --write .",
-    "dev": "tsx watch src/server.ts",
-    "prepare": "husky"
-  },
-  "lint-staged": {
-    "src/**/*.ts": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.json": [
-      "prettier --write"
-    ]
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jpfreitas-dev/refund-api.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
-  "bugs": {
-    "url": "https://github.com/jpfreitas-dev/refund-api/issues"
-  },
-  "homepage": "https://github.com/jpfreitas-dev/refund-api#readme",
-  "dependencies": {
-    "@prisma/adapter-better-sqlite3": "^7.8.0",
-    "@prisma/client": "^7.8.0",
-    "bcrypt": "^5.1.1",
-    "better-sqlite3": "^12.11.1",
-    "cors": "^2.8.5",
-    "dotenv": "^17.4.2",
-    "express": "^4.19.2",
-    "express-async-errors": "^3.1.1",
-    "jsonwebtoken": "^9.0.2",
-    "multer": "^2.2.0",
-    "zod": "^3.24.1"
+    "prepare": "husky",
+    "dev:backend": "npm run dev --workspace refund-api",
+    "dev:frontend": "npm run dev --workspace refund-web"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@types/bcrypt": "^5.0.2",
-    "@types/better-sqlite3": "^7.6.13",
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
-    "@types/jsonwebtoken": "^9.0.7",
-    "@types/multer": "^2.2.0",
-    "eslint": "^10.6.0",
-    "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
-    "lint-staged": "^17.0.8",
-    "prettier": "^3.9.4",
-    "prisma": "^7.8.0",
-    "ts-node": "^10.9.2",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.63.0"
+    "lint-staged": "^17.0.8"
   },
-  "allowScripts": {
-    "bcrypt@5.1.1": true,
-    "@prisma/engines@7.8.0": true,
-    "prisma@7.8.0": true,
-    "better-sqlite3@12.11.1": true,
-    "esbuild@0.28.1": true
+  "lint-staged": {
+    "backend/**/*.{ts,tsx}": [
+      "npm run lint:fix --workspace backend",
+      "npm run format --workspace backend"
+    ],
+    "frontend/**/*.{ts,tsx}": [
+      "npm run lint:fix --workspace frontend",
+      "npm run format --workspace frontend"
+    ]
   }
 }

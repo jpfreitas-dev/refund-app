@@ -1,11 +1,11 @@
 type: collection.insomnia.rest/5.0
-schema_version: "5.1"
+schema_version: '5.1'
 name: Refund API
 meta:
   id: wrk_d5cb68332dec47d687d2cfe814264711
   created: 1783436114118
   modified: 1784123235058
-  description: ""
+  description: ''
 collection:
   - name: Users
     meta:
@@ -13,16 +13,16 @@ collection:
       created: 1783637431091
       modified: 1783637474883
       sortKey: -1783637431092
-      description: ""
+      description: ''
     children:
-      - url: "{{ _.BASE_URL }}/{{ _.RESOURCE }}"
+      - url: '{{ _.BASE_URL }}/{{ _.RESOURCE }}'
         name: Create
         meta:
           id: req_c824691aa99c42fbbce65d923694b202
           created: 1783637439908
           modified: 1784054646106
           isPrivate: false
-          description: ""
+          description: ''
           sortKey: -1783637439908
         method: POST
         body:
@@ -52,16 +52,16 @@ collection:
       created: 1783727610296
       modified: 1783727623401
       sortKey: -1783727610296
-      description: ""
+      description: ''
     children:
-      - url: "{{ _.BASE_URL }}/{{ _.RESOURCE }}"
+      - url: '{{ _.BASE_URL }}/{{ _.RESOURCE }}'
         name: Create
         meta:
           id: req_768382ff80134a97b25eb81a04112650
           created: 1783727625159
           modified: 1784054632048
           isPrivate: false
-          description: ""
+          description: ''
           sortKey: -1783727625159
         method: POST
         body:
@@ -90,16 +90,16 @@ collection:
       created: 1783734418983
       modified: 1783734434535
       sortKey: -1783734418983
-      description: ""
+      description: ''
     children:
-      - url: "{{ _.BASE_URL }}/{{ _.RESOURCE }}"
+      - url: '{{ _.BASE_URL }}/{{ _.RESOURCE }}'
         name: Create
         meta:
           id: req_0e1e4f2921c842e48c98701134413a9c
           created: 1783734435678
           modified: 1784045957910
           isPrivate: false
-          description: ""
+          description: ''
           sortKey: -1783734435678
         method: POST
         body:
@@ -126,28 +126,28 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: "{{ _.BASE_URL }}/{{ _.RESOURCE }}"
+      - url: '{{ _.BASE_URL }}/{{ _.RESOURCE }}'
         name: Index
         meta:
           id: req_899f26d4e3d34dcab3108bf1795fa02d
           created: 1783991916582
           modified: 1784047799001
           isPrivate: false
-          description: ""
+          description: ''
           sortKey: -1783991916582
         method: GET
         parameters:
           - name: name
             value: João Paulo
-            description: ""
+            description: ''
             disabled: false
           - name: perPage
-            value: "10"
-            description: ""
+            value: '10'
+            description: ''
             disabled: false
           - name: page
-            value: "1"
-            description: ""
+            value: '1'
+            description: ''
             disabled: false
         authentication:
           type: bearer
@@ -161,14 +161,14 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: "{{ _.BASE_URL }}/{{ _.RESOURCE }}/7f1e3bcb-f3ff-4449-9eb0-a13b519bd7e2"
+      - url: '{{ _.BASE_URL }}/{{ _.RESOURCE }}/7f1e3bcb-f3ff-4449-9eb0-a13b519bd7e2'
         name: Show
         meta:
           id: req_9fa28f26f36740a2a6d99b0abfbe1cd8
           created: 1784049144393
           modified: 1784049212726
           isPrivate: false
-          description: ""
+          description: ''
           sortKey: -1783991916682
         method: GET
         authentication:
@@ -191,24 +191,24 @@ collection:
       created: 1784054481917
       modified: 1784054570325
       sortKey: -1784054481917
-      description: ""
+      description: ''
     children:
-      - url: "{{ _.BASE_URL }}/{{ _.RESOURCE }}"
+      - url: '{{ _.BASE_URL }}/{{ _.RESOURCE }}'
         name: Create
         meta:
           id: req_68b00617774345d28f03730544bf1559
           created: 1784054501061
           modified: 1784055029829
           isPrivate: false
-          description: ""
+          description: ''
           sortKey: -1784054501061
         method: POST
         body:
           mimeType: multipart/form-data
           params:
             - name: file
-              value: ""
-              description: ""
+              value: ''
+              description: ''
               disabled: false
               fileName: C:\Downloads\Comprovante de Dependente de Industriário.pdf
               type: file
@@ -227,14 +227,14 @@ collection:
             send: true
             store: true
           rebuildPath: true
-      - url: "{{ _.BASE_URL }}/{{ _.RESOURCE }}/[filename]"
+      - url: '{{ _.BASE_URL }}/{{ _.RESOURCE }}/[filename]'
         name: Show
         meta:
           id: req_4bb38f43234943399512110deb228dd9
           created: 1784070511752
           modified: 1784123211240
           isPrivate: false
-          description: ""
+          description: ''
           sortKey: -1784054501161
         method: GET
         authentication:
