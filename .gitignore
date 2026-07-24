@@ -1,11 +1,11 @@
-backend/node_modules
-backend/dist
-backend/.env
-backend/.DS_Store
-backend/generated/prisma
+apps/backend/node_modules
+apps/backend/dist
+apps/backend/.env
+apps/backend/.DS_Store
+apps/backend/generated/prisma
 
-frontend/node_modules
-frontend/dist
-frontend/.env
+apps/frontend/node_modules
+apps/frontend/dist
+apps/frontend/.env
 
 node_modules
