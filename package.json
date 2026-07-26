@@ -2,8 +2,8 @@
   "name": "refund-app",
   "private": true,
   "workspaces": [
-    "backend",
-    "frontend"
+    "apps/backend",
+    "apps/frontend"
   ],
   "scripts": {
     "prepare": "husky",
@@ -12,16 +12,17 @@
   },
   "devDependencies": {
     "husky": "^9.1.7",
-    "lint-staged": "^17.0.8"
+    "lint-staged": "^17.0.8",
+    "prettier": "^3.9.4"
   },
   "lint-staged": {
-    "backend/**/*.{ts,tsx}": [
-      "npm run lint:fix --workspace backend",
-      "npm run format --workspace backend"
+    "apps/backend/**/*.{ts,tsx}": [
+      "npm run lint:fix --workspace refund-api",
+      "npm run format --workspace refund-api"
     ],
-    "frontend/**/*.{ts,tsx}": [
-      "npm run lint:fix --workspace frontend",
-      "npm run format --workspace frontend"
+    "apps/frontend/**/*.{ts,tsx}": [
+      "npm run lint:fix --workspace refund-web",
+      "npm run format --workspace refund-web"
     ]
   }
 }
