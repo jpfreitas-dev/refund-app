@@ -1,16 +1,18 @@
-import eslint from '@eslint/js';
+import js from '@eslint/js';
 import { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import tseslint from 'typescript-eslint';
+import { defineConfig, globalIgnores } from 'eslint/config';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import globals from 'globals';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import tseslint from 'typescript-eslint';
 
 const currentFilePath = fileURLToPath(import.meta.url);
 const currentDirectory = dirname(currentFilePath);
 
-export default tseslint.config(
-  {
-    ignores: ['dist/', 'node_modules/', 'generated/'],
-  },
+export default defineConfig([
+  globalIgnores(['dist', 'node_modules']),
 
   {
     languageOptions: {
@@ -20,26 +22,26 @@ export default tseslint.config(
     },
   },
 
-  // Enable the recommended ESLint rules for JavaScript
-  eslint.configs.recommended,
-
-  // Enable the recommended ESLint rules for TypeScript
-  ...tseslint.configs.recommended,
-
-  // Specific configuration for TypeScript files
   {
-    files: ['**/*.ts'],
+    files: ['**/*.{ts,tsx}'],
+
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.recommended,
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
+      eslintConfigPrettier,
+    ],
+
     languageOptions: {
-      parser: tseslint.parser,
       parserOptions: {
-        project: true,
         tsconfigRootDir: currentDirectory,
       },
+      globals: globals.browser,
     },
+
     rules: {
-      '@typescript-eslint/no-floating-promises': 'error',
       '@typescript-eslint/no-explicit-any': 'error',
-      'no-console': 'warn',
 
       '@typescript-eslint/no-unused-vars': [
         'error',
@@ -49,9 +51,8 @@ export default tseslint.config(
           caughtErrorsIgnorePattern: '^_',
         },
       ],
+
+      'no-console': 'warn',
     },
   },
-
-  // Enable Prettier to automatically format code and avoid conflicts with ESLint rules
-  eslintConfigPrettier,
-);
+]);
