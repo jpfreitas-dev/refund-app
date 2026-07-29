@@ -25,7 +25,7 @@ export function Confirm() {
         href="/"
         className=" w-full p-3 text-center bg-green-100 rounded-lg text-white hover:bg-green-200 transition ease-linear"
       >
-        Voltar para a página inicial
+        Nova Solicitação
       </a>
     </div>
   );
