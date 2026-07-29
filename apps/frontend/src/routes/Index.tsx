@@ -9,7 +9,7 @@ const isLoading = false; // Simulação de carregamento
 
 const session = {
   user: {
-    role: 'manager',
+    role: '',
   },
 };
 
