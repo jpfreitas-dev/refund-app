@@ -14,8 +14,9 @@ const signUpSchema = z
     email: z.email({ message: 'Email inválido' }),
     password: z
       .string()
+      .trim()
       .min(6, { message: 'A senha deve ter pelo menos 6 caracteres' }),
-    passwordConfirm: z.string({ message: 'Confirme a senha' }),
+    passwordConfirm: z.string({ message: 'Confirme a senha' }).trim(),
   })
   .refine((data) => data.password === data.passwordConfirm, {
     message: 'As senhas não são iguais',

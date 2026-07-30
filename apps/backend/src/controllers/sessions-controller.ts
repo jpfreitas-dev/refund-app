@@ -9,7 +9,7 @@ import { compare } from 'bcrypt';
 class SessionsController {
   async create(request: Request, response: Response) {
     const bodySchema = z.object({
-      email: z.string().trim().email({ message: 'Invalid email address' }),
+      email: z.string().trim().email({ message: 'Email inválido' }),
       password: z.string().trim(),
     });
 
@@ -20,13 +20,13 @@ class SessionsController {
     });
 
     if (!user) {
-      throw new AppError('Invalid email or password', 401);
+      throw new AppError('Email ou senha inválidos', 401);
     }
 
     const passwordMatch = await compare(password, user.password);
 
     if (!passwordMatch) {
-      throw new AppError('Invalid email or password', 401);
+      throw new AppError('Email ou senha inválidos', 401);
     }
 
     const { secret, expiresIn } = authConfig.jwt;
