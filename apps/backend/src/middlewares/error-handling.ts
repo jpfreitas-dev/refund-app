@@ -15,14 +15,14 @@ export const errorHandling: ErrorRequestHandler = (
 
   if (error instanceof ZodError) {
     response.status(400).json({
-      message: 'Validation error',
+      message: 'Erro de validação',
       issues: error.format(),
     });
     return;
   }
 
   response.status(500).json({
-    message: 'Internal server error',
+    message: 'Erro interno do servidor',
   });
 
   return;

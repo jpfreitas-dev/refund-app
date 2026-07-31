@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react';
 
 import { AuthContext } from './AuthContext';
+import { api } from '../services/api';
 
 const LOCAL_STORAGE_KEYS = '@refund';
 
@@ -9,9 +10,11 @@ const loadUserFromLocalStorage = (): null | UserAPIResponse => {
   const token = localStorage.getItem(`${LOCAL_STORAGE_KEYS}:token`);
 
   if (user && token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
     return {
       user: JSON.parse(user),
-      token: JSON.parse(token),
+      token,
     };
   }
 
@@ -29,10 +32,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       JSON.stringify(data.user),
     );
 
-    localStorage.setItem(
-      `${LOCAL_STORAGE_KEYS}:token`,
-      JSON.stringify(data.token),
-    );
+    localStorage.setItem(`${LOCAL_STORAGE_KEYS}:token`, data.token);
+
+    api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+
     setSession(data);
   }
 
