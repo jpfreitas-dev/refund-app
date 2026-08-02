@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/useAuth';
 
 export function Header() {
   const auth = useAuth();
+  const user = localStorage.getItem('@refund:user');
 
   return (
     <header className="w-full flex justify-between">
@@ -12,7 +13,7 @@ export function Header() {
 
       <div className="flex items-center gap-3">
         <span className="text-sm font-semibold text-gray-200 ">
-          Olá, João Paulo!
+          {`Olá, ${user && JSON.parse(user).name}!`}
         </span>
 
         <img
