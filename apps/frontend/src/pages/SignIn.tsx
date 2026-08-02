@@ -1,35 +1,74 @@
-import { useState } from 'react';
+import { useActionState } from 'react';
+
 import { Input } from '../components/Input';
 import { Button } from '../components/Button';
 
+import { z, ZodError } from 'zod';
+import { AxiosError } from 'axios';
+import { api } from '../services/api';
+import { useAuth } from '../hooks/useAuth';
+
+const signInSchema = z.object({
+  email: z.email({ message: 'Email inválido' }),
+  password: z.string().trim().min(1, { message: 'Informe a senha' }),
+});
+
 export function SignIn() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, _setIsLoading] = useState(false);
+  const [state, formAction, isLoading] = useActionState(signIn, null);
 
-  function onSubmit(e: React.SubmitEvent) {
-    e.preventDefault();
+  const auth = useAuth();
 
-    alert(`Email: ${email}\nSenha: ${password}`);
+  async function signIn(_: { message: string } | null, formData: FormData) {
+    try {
+      const userData = signInSchema.parse({
+        email: formData.get('email'),
+        password: formData.get('password'),
+      });
+
+      const response = await api.post('/sessions', userData);
+      auth.saveDataToLocalStorage(response.data);
+
+      return null;
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return { message: error.issues[0].message };
+      }
+
+      if (error instanceof AxiosError) {
+        return {
+          message: error.response?.data.message || 'Erro ao fazer login',
+        };
+      }
+
+      return { message: 'Erro ao fazer login' };
+    }
   }
 
   return (
-    <form className="w-full flex flex-col gap-4" onSubmit={onSubmit}>
+    <form
+      className="w-full flex flex-col gap-4"
+      action={formAction}
+      method="post"
+    >
       <Input
+        name="email"
         required
         legend="Email"
         type="email"
         placeholder="seu@email.com"
-        onChange={(e) => setEmail(e.target.value)}
       />
 
       <Input
+        name="password"
         required
         legend="Senha"
         type="password"
         placeholder="senha123"
-        onChange={(e) => setPassword(e.target.value)}
       />
+
+      <p className="text-sm text-red-600 text-center font-medium my-4">
+        {state?.message}
+      </p>
 
       <Button type="submit" isLoading={isLoading}>
         Entrar

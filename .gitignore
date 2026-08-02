@@ -3,6 +3,7 @@ apps/backend/dist
 apps/backend/.env
 apps/backend/.DS_Store
 apps/backend/generated/prisma
+apps/backend/prisma/dev.db
 
 apps/frontend/node_modules
 apps/frontend/dist

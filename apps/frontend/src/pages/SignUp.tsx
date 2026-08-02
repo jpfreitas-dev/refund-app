@@ -1,20 +1,70 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
+
 import { Input } from '../components/Input';
 import { Button } from '../components/Button';
+
+import { z, ZodError } from 'zod';
+import { AxiosError } from 'axios';
+import { api } from '../services/api';
+
+const signUpSchema = z
+  .object({
+    name: z.string().min(3, { message: 'Informe o nome' }),
+    email: z.email({ message: 'Email inválido' }),
+    password: z
+      .string()
+      .trim()
+      .min(6, { message: 'A senha deve ter pelo menos 6 caracteres' }),
+    passwordConfirm: z.string({ message: 'Confirme a senha' }).trim(),
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    message: 'As senhas não são iguais',
+    path: ['passwordConfirm'],
+  });
 
 export function SignUp() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-  const [isLoading, _setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  function onSubmit(e: React.SubmitEvent) {
+  const navigate = useNavigate();
+
+  async function onSubmit(e: React.SubmitEvent) {
     e.preventDefault();
 
-    alert(
-      `Nome: ${name}\nEmail: ${email}\nSenha: ${password}\nConfirmação da senha: ${passwordConfirm}`,
-    );
+    try {
+      setIsLoading(true);
+
+      const data = signUpSchema.parse({
+        name,
+        email,
+        password,
+        passwordConfirm,
+      });
+
+      await api.post('/users', data);
+
+      if (confirm('Cadastrado com sucesso! Deseja fazer login?')) {
+        navigate('/');
+      }
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return alert(error.issues[0].message);
+      }
+
+      if (error instanceof AxiosError) {
+        return alert(
+          error.response?.data.message || 'Erro ao cadastrar usuário',
+        );
+      }
+
+      alert('Erro ao cadastrar usuário');
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -45,7 +95,7 @@ export function SignUp() {
 
       <Input
         required
-        legend="Confirmaçãp da senha"
+        legend="Confirmação da senha"
         type="password"
         placeholder="senha123"
         onChange={(e) => setPasswordConfirm(e.target.value)}

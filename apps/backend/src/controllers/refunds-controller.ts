@@ -6,7 +6,7 @@ import { AppError } from '@/utils/AppError';
 class RefundsController {
   async create(request: Request, response: Response) {
     const bodySchema = z.object({
-      name: z.string().trim().min(1, 'Name is required'),
+      name: z.string().trim().min(1, 'Nome é obrigatório'),
       category: z.enum([
         'food',
         'others',
@@ -14,14 +14,14 @@ class RefundsController {
         'transport',
         'accommodation',
       ]),
-      amount: z.number().positive('Amount must be a positive number'),
-      filename: z.string().min(20, 'Filename is required'),
+      amount: z.number().positive('Informe um valor válido e superior a 0'),
+      filename: z.string().min(20, 'Nome do arquivo é obrigatório'),
     });
 
     const { name, category, amount, filename } = bodySchema.parse(request.body);
 
     if (!request.user?.id) {
-      throw new AppError('Unauthorized', 401);
+      throw new AppError('Não autorizado', 401);
     }
 
     const refund = await prisma.refunds.create({
@@ -105,7 +105,7 @@ class RefundsController {
     });
 
     if (!refund) {
-      throw new AppError('Refund not found', 404);
+      throw new AppError('Reembolso não encontrado', 404);
     }
 
     response.status(200).json(refund);

@@ -11,16 +11,16 @@ class UsersController {
       name: z
         .string()
         .trim()
-        .min(3, { message: 'Name must be at least 3 characters long' }),
+        .min(3, { message: 'Nome precisa ter pelo menos 3 caracteres' }),
       email: z
         .string()
         .trim()
-        .email({ message: 'Invalid email address' })
+        .email({ message: 'Email inválido' })
         .toLowerCase(),
       password: z
         .string()
         .trim()
-        .min(6, { message: 'Password must be at least 6 characters long' }),
+        .min(6, { message: 'A senha deve ter pelo menos 6 caracteres' }),
       role: z
         .enum([UserRole.employee, UserRole.manager])
         .optional()
@@ -34,7 +34,7 @@ class UsersController {
     });
 
     if (userWithSameEmail) {
-      throw new AppError('Email already exists', 409);
+      throw new AppError('O email já está sendo usado', 409);
     }
 
     const hashedPassword = await hash(password, 8);

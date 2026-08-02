@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+import { api } from '../services/api';
+import { AxiosError } from 'axios';
 
 import searchSvg from '../assets/search.svg';
 import { CATEGORIES } from '../utils/categories';
@@ -9,23 +12,21 @@ import { Button } from '../components/Button';
 import { RefundItem, type RefundItemProps } from '../components/RefundItem';
 import { Pagination } from '../components/Pagination';
 
-const REFUND_EXAMPLE = {
-  id: '1',
-  name: 'João Paulo',
-  category: 'Transporte',
-  amount: formatCurrency(34.5),
-  categoryImg: CATEGORIES['transport'].icon,
-};
+const PER_PAGE = 2;
 
 export function Dashboard() {
-  const [name, setName] = useState('');
-  const [page, setPage] = useState(1);
-  const [totalOfPages, _setTotalOfPages] = useState(10);
-  const [refunds, _setRefunds] = useState<RefundItemProps[]>([REFUND_EXAMPLE]);
+  const [nameInput, setNameInput] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  function fetchRefunds(e: React.ChangeEvent) {
+  const [page, setPage] = useState(1);
+  const [totalOfPages, _setTotalOfPages] = useState(0);
+  const [refunds, _setRefunds] = useState<RefundItemProps[]>([]);
+
+  function onSubmit(e: React.SubmitEvent) {
     e.preventDefault();
-    console.log('fetching refunds with name:', name);
+
+    setSearchQuery(nameInput.trim());
+    setPage(1);
   }
 
   function handlePagination(action: 'next' | 'previous') {
@@ -42,17 +43,50 @@ export function Dashboard() {
     });
   }
 
+  useEffect(() => {
+    async function fetchRefunds() {
+      try {
+        const response = await api.get<RefundsPaginationAPIResponse>(
+          `/refunds?name=${searchQuery}&page=${page}&perPage=${PER_PAGE}`,
+        );
+
+        _setRefunds(
+          response.data.refunds.map((refund) => ({
+            id: refund.id,
+            name: refund.user.name,
+            description: refund.name,
+            amount: formatCurrency(refund.amount),
+            categoryImg: CATEGORIES[refund.category].icon,
+          })),
+        );
+
+        _setTotalOfPages(response.data.pagination.totalPages);
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          return alert(
+            error.response?.data.message ||
+              'Ocorreu um erro ao buscar as solicitações',
+          );
+        }
+
+        return alert('Ocorreu um erro ao buscar as solicitações');
+      }
+    }
+
+    fetchRefunds();
+  }, [searchQuery, page]);
+
   return (
     <div className="bg-gray-500 rounded-xl p-10 md:min-w-3xl">
       <h1 className="text-gray-100 font-bold text-xl flex-1">Solicitações</h1>
 
       <form
-        onSubmit={fetchRefunds}
+        onSubmit={onSubmit}
         className="flex flex-1 items-center justify-between pb-6 border-b border-b-gray-400 md:flex-row gap-2 mt-6"
       >
         <Input
           placeholder="Pesquisar pelo nome"
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => setNameInput(e.target.value)}
         />
 
         <Button variant="icon" type="submit">

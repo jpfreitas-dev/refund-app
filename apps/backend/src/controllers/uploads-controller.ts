@@ -12,17 +12,17 @@ class UploadsController {
     try {
       const fileSchema = z
         .object({
-          filename: z.string().min(1, { message: 'File is required' }),
+          filename: z.string().min(1, { message: 'Um arquivo é obrigatório' }),
           mimetype: z
             .string()
             .refine((type) => uploadConfig.ACCEPTED_FILE_TYPES.includes(type), {
-              message: `Invalid file type. Accepted types: ${uploadConfig.ACCEPTED_FILE_TYPES.join(', ')}`,
+              message: `Tipo de arquivo inválido. Tipos aceitos: ${uploadConfig.ACCEPTED_FILE_TYPES.join(', ')}`,
             }),
           size: z
             .number()
             .positive()
             .max(uploadConfig.MAX_FILE_SIZE, {
-              message: `File size exceeds the maximum limit of ${uploadConfig.MAX_SIZE} MB`,
+              message: `Tamanho do arquivo excede o limite máximo de ${uploadConfig.MAX_SIZE} MB`,
             }),
         })
         .passthrough();
