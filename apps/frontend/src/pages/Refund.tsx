@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
 import { z, ZodError } from 'zod';
@@ -7,6 +7,7 @@ import { AxiosError } from 'axios';
 
 import fileSvg from '../assets/file.svg';
 import { CATEGORIES, CATEGORIES_KEYS } from '../utils/categories';
+import { formatCurrency } from '../utils/formatCurrency';
 
 import { Input } from '../components/Input';
 import { Select } from '../components/Select';
@@ -29,6 +30,7 @@ export function Refund() {
   const [category, setCategory] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const [fileURL, setFileURL] = useState<string | null>(null);
 
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
@@ -79,6 +81,35 @@ export function Refund() {
     }
   }
 
+  useEffect(() => {
+    if (params.id) {
+      async function fetchRefund() {
+        try {
+          const { data } = await api.get<RefundAPIResponse>(
+            `/refunds/${params.id}`,
+          );
+
+          setName(data.name);
+          setCategory(data.category);
+          setAmount(formatCurrency(data.amount));
+          setFileURL(data.filename);
+          setFile({ name: data.filename } as File);
+        } catch (error) {
+          if (error instanceof AxiosError) {
+            return alert(
+              error.response?.data.message ||
+                'Ocorreu um erro ao buscar a solicitação',
+            );
+          }
+
+          return alert('Ocorreu um erro ao buscar a solicitação');
+        }
+      }
+
+      fetchRefund();
+    }
+  }, [params.id]);
+
   return (
     <form
       onSubmit={onSubmit}
@@ -125,9 +156,9 @@ export function Refund() {
         />
       </div>
 
-      {params.id ? (
+      {params.id && fileURL ? (
         <a
-          href=""
+          href={`http://localhost:3333/uploads/${fileURL}`}
           target="_blank"
           className="text-sm text-green-100 font-semibold flex items-center justify-center gap-2 my-6 hover:opacity-70 transition ease-linear"
         >
