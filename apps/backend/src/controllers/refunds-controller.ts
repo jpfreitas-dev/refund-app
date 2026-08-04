@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
-import { prisma } from '@/lib/prisma';
+
 import { AppError } from '@/utils/AppError';
+import { refundsService } from '@/services/refunds-service';
 
 class RefundsController {
   async create(request: Request, response: Response) {
@@ -18,23 +19,18 @@ class RefundsController {
       filename: z.string().min(20, 'Nome do arquivo é obrigatório'),
     });
 
-    const { name, category, amount, filename } = bodySchema.parse(request.body);
+    const data = bodySchema.parse(request.body);
 
     if (!request.user?.id) {
       throw new AppError('Não autorizado', 401);
     }
 
-    const refund = await prisma.refunds.create({
-      data: {
-        name,
-        category,
-        amount,
-        filename,
-        userId: request.user.id,
-      },
+    const refund = await refundsService.create({
+      ...data,
+      userId: request.user.id,
     });
 
-    response.status(201).json(refund);
+    return response.status(201).json(refund);
   }
 
   async index(request: Request, response: Response) {
@@ -44,57 +40,11 @@ class RefundsController {
       perPage: z.coerce.number().optional().default(10),
     });
 
-    const { name, page, perPage } = querySchema.parse(request.query);
+    const query = querySchema.parse(request.query);
 
-    const skip = (page - 1) * perPage;
+    const result = await refundsService.index(query);
 
-    const refunds = await prisma.refunds.findMany({
-      skip,
-      take: perPage,
-      where: {
-        user: {
-          name: {
-            contains: name.trim(),
-          },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            role: true,
-          },
-        },
-      },
-    });
-
-    // return the total count of refunds for pagination
-    const totalRecords = await prisma.refunds.count({
-      where: {
-        user: {
-          name: {
-            contains: name.trim(),
-          },
-        },
-      },
-    });
-
-    const totalPages = Math.ceil(totalRecords / perPage);
-
-    response.status(200).json({
-      refunds,
-      pagination: {
-        page,
-        perPage,
-        totalRecords,
-        totalPages: totalPages > 0 ? totalPages : 1,
-      },
-    });
+    return response.status(200).json(result);
   }
 
   async show(request: Request, response: Response) {
@@ -104,25 +54,9 @@ class RefundsController {
 
     const { id } = paramsSchema.parse(request.params);
 
-    const refund = await prisma.refunds.findFirst({
-      where: { id },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-            role: true,
-          },
-        },
-      },
-    });
+    const refund = await refundsService.show(id);
 
-    if (!refund) {
-      throw new AppError('Reembolso não encontrado', 404);
-    }
-
-    response.status(200).json(refund);
+    return response.status(200).json(refund);
   }
 }
 
