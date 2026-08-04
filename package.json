@@ -8,7 +8,9 @@
   "scripts": {
     "prepare": "husky",
     "dev:backend": "npm run dev --workspace refund-api",
-    "dev:frontend": "npm run dev --workspace refund-web"
+    "dev:frontend": "npm run dev --workspace refund-web",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down"
   },
   "devDependencies": {
     "husky": "^9.1.7",
