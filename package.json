@@ -10,7 +10,9 @@
     "dev:backend": "npm run dev --workspace refund-api",
     "dev:frontend": "npm run dev --workspace refund-web",
     "docker:up": "docker compose up --build",
-    "docker:down": "docker compose down"
+    "docker:down": "docker compose down",
+    "test:api": "npm run test --workspace refund-api",
+    "test:e2e": "npm run test:e2e --workspace refund-web"
   },
   "devDependencies": {
     "husky": "^9.1.7",
