@@ -1,9 +1,6 @@
 import { Request, Response } from 'express';
-import { UserRole } from '../../generated/prisma/client';
-import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
-import { AppError } from '@/utils/AppError';
-import { hash } from 'bcrypt';
+import { usersService } from '@/services/users-service';
 
 class UsersController {
   async create(request: Request, response: Response) {
@@ -23,26 +20,9 @@ class UsersController {
         .min(6, { message: 'A senha deve ter pelo menos 6 caracteres' }),
     });
 
-    const { name, email, password } = bodySchema.parse(request.body);
+    const data = bodySchema.parse(request.body);
 
-    const userWithSameEmail = await prisma.user.findUnique({
-      where: { email },
-    });
-
-    if (userWithSameEmail) {
-      throw new AppError('O email já está sendo usado', 409);
-    }
-
-    const hashedPassword = await hash(password, 8);
-
-    await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-        role: UserRole.employee,
-      },
-    });
+    await usersService.create(data);
 
     response.status(201).json({ message: 'User created successfully' });
   }
