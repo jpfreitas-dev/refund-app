@@ -1,0 +1,32 @@
+---
+description: Backend conventions for Express + Prisma API
+globs: apps/backend/**
+alwaysApply: false
+---
+
+# Backend conventions
+
+## Layers
+
+- Flow: `routes` → `controllers` → `services` (target) → Prisma via `lib/prisma`
+- Controllers: Zod validation, HTTP status, call service; keep thin
+- Services: business rules and Prisma access; no `req`/`res`
+- Routes: mount handlers and middlewares only
+
+## Errors & auth
+
+- Throw `AppError` for expected failures; use the shared error middleware
+- Auth: JWT from env (`config/auth`); never hardcode secrets
+- Never return `password` (or password hash) in JSON responses
+- Role checks via authorization middleware, not ad-hoc string checks scattered in controllers when a pattern already exists
+
+## Uploads & static files
+
+- Upload config lives under `config/`; disk helpers under `utils/`
+- Protected file access should require authentication (Phase 2 security work)
+
+## Style
+
+- Match existing file naming (`kebab-case` controllers, routes, middlewares)
+- Prefer flat folders under `src/` over inventing `modules/`
+---

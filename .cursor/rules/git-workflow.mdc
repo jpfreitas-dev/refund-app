@@ -1,0 +1,26 @@
+---
+description: Branch naming, commit messages, and PR discipline
+alwaysApply: true
+---
+
+# Git workflow
+
+## Branches
+
+- Format: `type/kebab-case-topic`
+- Types: `chore`, `fix`, `refactor`, `feat`, `docs`
+- One theme per branch / PR; do not mix unrelated concerns
+- Base work on updated `main` after each merged PR
+
+## Commits
+
+- Format: `type(scope): short imperative summary`
+- Examples: `fix(users): prevent self-assignment of manager role on signup`
+- One logical change per commit when following the phase plan
+- Do not commit unless the user asks (user rule for this project)
+
+## PRs
+
+- Keep title aligned with the main intent (`chore:`, `fix:`, `refactor:`, `docs:`)
+- Prefer the Phase 2 sequence over ad-hoc large refactors
+---
