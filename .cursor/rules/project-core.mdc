@@ -7,16 +7,17 @@ alwaysApply: true
 
 ## Monorepo
 
-- `apps/backend` — Express + Prisma (SQLite) API
+- `apps/backend` — Express + Prisma (PostgreSQL) API
 - `apps/frontend` — React + Vite SPA
 - Do not invent a new monorepo tool; keep the current layout
 
-## Phase 3 scope
+## Scope
 
-- Portfolio foundation — service convention docs, **dev-only Docker Compose**, **API (Supertest) + E2E (Playwright)**
-- No Postgres/S3 and no new domain features (approve/reject, etc.)
-- Root README stays deferred until post–Phase 3
-- Prefer reviewable diffs aligned with [new-features.md](../docs/new-features.md) (fewer, denser PRs)
+- Portfolio foundation complete (service conventions, dev Docker Compose, API + E2E tests)
+- PostgreSQL via Prisma in dev, Docker, and API tests
+- No S3 and no new domain features (approve/reject, etc.)
+- Root README stays deferred until feature-complete
+- Prefer reviewable diffs aligned with [new-features.md](../docs/new-features.md)
 
 ## Secrets & env
 

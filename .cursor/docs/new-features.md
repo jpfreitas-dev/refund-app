@@ -1,115 +1,113 @@
-# Phase 3 — Portfolio foundation (#11–#13)
+# Final feature — PostgreSQL via Prisma
 
-Root README is deferred until the project is feature-complete. No new domain features (approve/reject, etc.), no Postgres/S3, no production Docker images.
+Root README stays deferred until the project is feature-complete. This is the **last planned infrastructure change** before that milestone. No new domain features (approve/reject, etc.), no S3, no production Docker images.
 
-## Goals
+## Completed
 
-- Crystalize backend **service naming and multi-method domain services** (flat folders)
-- **Docker Compose for development** so recruiters can clone and run locally
-- **API tests (Supertest)** + **E2E (Playwright)** with npm scripts
-- Few, denser PRs rather than micro-splits
+- Multi-method domain service convention (flat `controllers/`, `services/`, `routes/`)
+- Development Docker Compose stack (backend + frontend + postgres)
+- API tests: Vitest + Supertest (`test:api`) against PostgreSQL (`refund_test`)
+- E2E tests: Playwright (`test:e2e`)
+- PostgreSQL 16 via Prisma (`@prisma/adapter-pg` + `pg`)
+
+Service convention details remain in [architecture.md](./architecture.md).
+
+## Goal
+
+~~Migrate the Prisma datasource from **SQLite** to **PostgreSQL 16**~~ **Done.** PostgreSQL runs as a Compose service; dev, Docker, and API tests share the same engine (separate `refund_test` database for tests).
+
+```
+postgres (Compose) ← backend (Compose / local)
+                  ← Vitest test:api (refund_test)
+frontend → backend
+```
 
 ## Out of scope
 
-- Polished root README and production `build`/`start` narrative (post–Phase 3)
 - Domain features (approve/reject, extra statuses, filters beyond current behavior)
-- Postgres, S3, heavy CI pipelines
+- S3 / object storage
+- Production Docker images or hardened deploy narrative
+- Polished root README (post–feature-complete)
+- Heavy CI pipelines
 - Domain folder packing (`modules/refunds/`, one-file-per-use-case with single `execute()`)
 
-## Service convention (official)
+## Implementation
 
-**One service class per domain**, multiple public methods.
+| Item | Detail |
+| ---- | ------ |
+| Branch | `chore/postgres-prisma` |
+| PR title | `chore: migrate Prisma from SQLite to PostgreSQL` |
 
-| Piece   | Convention                    | Example                                              |
-| ------- | ----------------------------- | ---------------------------------------------------- |
-| File    | `kebab-case` + `-service.ts`  | `refunds-service.ts`                                 |
-| Class   | PascalCase domain + `Service` | `RefundsService`                                     |
-| Methods | Operation verbs               | `create`, `index`, `show`                            |
-| Export  | Singleton instance            | `export const refundsService = new RefundsService()` |
-
-- Controllers stay thin (Zod + HTTP); services hold rules + Prisma; no `req`/`res` in services
-- Do **not** split into `CreateRefundService` / `execute()` per operation — unnecessary file sprawl at this app size
-- Do **not** migrate to `modules/<domain>/`; keep flat `controllers/`, `services/`, `routes/`
-
-## Order
-
-| #       | Branch                        | Goal                                                |
-| ------- | ----------------------------- | --------------------------------------------------- |
-| **#11** | `docs/implement-new-features` | This doc + Cursor docs/rules alignment              |
-| **#12** | `chore/docker-dev`            | Dev Compose + Dockerfiles + scripts for local stack |
-| **#13** | `test/api-and-e2e`            | Supertest API suite + Playwright E2E + npm scripts  |
+### Commits (suggested order)
 
 ```
-#11 → #12 → #13
+chore(prisma): switch datasource to postgresql and regenerate migrations
+chore(docker): add postgres service to development compose stack
+chore(config): align DATABASE_URL in env examples and compose
+refactor(prisma): drop better-sqlite3 adapter and native build deps
+test(api): point Vitest setup at postgres test database
 ```
 
-## Commits per PR
+### Files to change
 
-### PR #11 — `docs/implement-new-features`
+| File | Change |
+| ---- | ------ |
+| `apps/backend/prisma/schema.prisma` | `provider = "postgresql"` |
+| `apps/backend/src/lib/prisma.ts` | Remove `PrismaBetterSqlite3` adapter; use `PrismaPg` with `pg` |
+| `docker-compose.yml` | Add `postgres` service; wire `DATABASE_URL` on backend |
+| `.env.example`, `apps/backend/.env.example` | PostgreSQL connection strings |
+| `apps/backend/package.json` | Remove `better-sqlite3` deps; add `@prisma/adapter-pg` and `pg` |
+| `apps/backend/prisma/migrations/` | Regenerate baseline (SQLite migrations are not portable) |
+| `apps/backend/src/tests/setup.ts` | Target `refund_test` DB; `migrate deploy` in `beforeAll`; drop `test.db` file logic |
+| `apps/backend/Dockerfile.dev` | Remove `python3` / `make` / `g++` (were for `better-sqlite3`); update default `DATABASE_URL` |
 
-```
-docs(cursor): add phase-3 portfolio foundation PR sequence
-docs(cursor): document multi-method domain service convention
-chore(cursor): allow Docker and test suites in phase-3 scope
-docs(cursor): defer root README until post phase-3
-```
+**Follow-up after merge:** update `project-core.mdc` — done in the same PR as this migration.
 
-**PR title:** `docs: add Phase 3 portfolio foundation plan`
+### Compose — `postgres` service
 
-### PR #12 — `chore/docker-dev`
+- Image: `postgres:16-alpine`
+- Env: `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB=refund`
+- Volume: `postgres_data`
+- Port: `5432` (exposed for local dev outside Docker)
+- Healthcheck: `pg_isready`
+- Backend: `depends_on: postgres` with `condition: service_healthy`
 
-```
-chore(docker): add development Dockerfiles for backend and frontend
-chore(docker): add Compose stack for local recruiter setup
-chore(config): align env examples with Compose services
-chore(scripts): add compose up helpers at repo root
-```
+### Connection URLs
 
-**PR title:** `chore: add development Docker Compose stack`
+| Environment | Example |
+| ----------- | ------- |
+| Docker backend | `postgresql://refund:refund@postgres:5432/refund` |
+| Local dev (host) | `postgresql://refund:refund@localhost:5432/refund` |
+| API tests | `postgresql://refund:refund@localhost:5432/refund_test` |
 
-Notes for implementation:
+Create `refund_test` once (e.g. `CREATE DATABASE refund_test;` or init script in Compose).
 
-- Dev-only images (hot reload / volume mounts as practical); not production hardening
-- Backend + frontend services; persist SQLite DB and uploads via volumes when useful
-- One-command path: `docker compose up` (document command in this phase doc / scripts; full README later)
+### Migrations
 
-### PR #13 — `test/api-and-e2e`
+SQLite migrations under `apps/backend/prisma/migrations/` cannot be reused. Reset and create a fresh PostgreSQL baseline (`prisma migrate dev` or squash). `docker-entrypoint.dev.sh` keeps running `prisma migrate deploy` on startup.
 
-```
-test(api): add Supertest suite for auth sessions users refunds uploads
-test(e2e): add Playwright flows for login and refund creation
-chore(scripts): add test:api and test:e2e npm scripts
-```
+## Scripts
 
-**PR title:** `test: add API and E2E suites`
-
-Notes for implementation:
-
-- API: hit Express `app` (or equivalent) with Supertest; cover happy paths + key auth/validation failures; fixtures minimal
-- E2E: Playwright for critical UI paths (login, create refund; manager view if already in product)
-- Do not chase 100% coverage; prefer readable smoke + regression value
-- Stack choice: Vitest or Jest for API runner — pick one and keep consistent with the backend toolchain
-
-## Scripts (target)
-
-| Script                                  | Purpose                             |
-| --------------------------------------- | ----------------------------------- |
-| `docker compose up` (or root npm alias) | Start dev stack for recruiters      |
-| `test:api`                              | Run backend API / integration tests |
-| `test:e2e`                              | Run Playwright E2E                  |
-
-Exact package.json placement (root vs `apps/*`) decided in #12/#13; keep discoverable from the repo root when practical.
+| Script | Purpose |
+| ------ | ------- |
+| `npm run docker:up` | Start postgres + backend + frontend; migrations on backend entrypoint |
+| `npm run docker:down` | Stop the dev stack |
+| `npm run test:api` | Run backend API tests (requires Postgres; uses `refund_test`) |
+| `npm run test:e2e` | Run Playwright E2E (backend `webServer` also needs Postgres) |
 
 ## Tests
 
 From the repo root:
 
 ```bash
+# Start Postgres first (full stack or postgres service only)
+npm run docker:up
+
 npm run test:api
 npm run test:e2e
 ```
 
-- **API:** Vitest + Supertest against Express `app`; uses isolated `prisma/test.db` (no Docker required)
+- **API:** Vitest + Supertest against Express `app`; `setup.ts` sets test `DATABASE_URL`, runs `migrate deploy` in `beforeAll`, truncates via `deleteMany` in `afterEach`
 - **E2E:** Playwright; starts backend + frontend via `webServer` when not already running (`reuseExistingServer` in dev)
 
 First-time E2E setup (Chromium browser):
@@ -130,5 +128,6 @@ npm run docker:up
 
 - API: http://localhost:3333
 - Web: http://localhost:5173
+- Postgres: `localhost:5432`
 - Optional overrides: copy root `.env.example` to `.env`
 - Stop: `npm run docker:down`

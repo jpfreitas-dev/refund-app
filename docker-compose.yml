@@ -1,4 +1,21 @@
 services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-refund}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-refund}
+      POSTGRES_DB: ${POSTGRES_DB:-refund}
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-refund} -d ${POSTGRES_DB:-refund}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   backend:
     build:
       context: .
@@ -6,13 +23,16 @@ services:
     ports:
       - '${BACKEND_PORT:-3333}:3333'
     environment:
-      DATABASE_URL: file:./prisma/dev.db
+      DATABASE_URL: postgresql://${POSTGRES_USER:-refund}:${POSTGRES_PASSWORD:-refund}@postgres:5432/${POSTGRES_DB:-refund}
       JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-change-me}
       PORT: 3333
     volumes:
       - ./apps/backend/src:/app/apps/backend/src
       - ./apps/backend/prisma:/app/apps/backend/prisma
       - ./apps/backend/tmp:/app/apps/backend/tmp
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   frontend:
     build:
@@ -29,3 +49,6 @@ services:
       - ./apps/frontend/vite.config.ts:/app/apps/frontend/vite.config.ts
     depends_on:
       - backend
+
+volumes:
+  postgres_data:
