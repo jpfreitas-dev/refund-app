@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
+
 import { AppError } from '@/utils/AppError';
 import { refundsService } from '@/services/refunds-service';
 
@@ -29,7 +30,7 @@ class RefundsController {
       userId: request.user.id,
     });
 
-    response.status(201).json(refund);
+    return response.status(201).json(refund);
   }
 
   async index(request: Request, response: Response) {
@@ -43,7 +44,7 @@ class RefundsController {
 
     const result = await refundsService.index(query);
 
-    response.status(200).json(result);
+    return response.status(200).json(result);
   }
 
   async show(request: Request, response: Response) {
@@ -55,7 +56,7 @@ class RefundsController {
 
     const refund = await refundsService.show(id);
 
-    response.status(200).json(refund);
+    return response.status(200).json(refund);
   }
 }
 

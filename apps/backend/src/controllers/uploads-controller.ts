@@ -7,7 +7,7 @@ class UploadsController {
   async create(request: Request, response: Response) {
     const result = await uploadsService.create(request.file);
 
-    response.status(201).json(result);
+    return response.status(201).json(result);
   }
 
   async show(request: Request, response: Response) {

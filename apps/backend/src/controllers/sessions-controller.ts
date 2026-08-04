@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
+
 import { sessionsService } from '@/services/sessions-service';
 
 class SessionsController {
@@ -13,7 +14,7 @@ class SessionsController {
 
     const session = await sessionsService.create(data);
 
-    response.json(session);
+    return response.status(200).json(session);
   }
 }
 

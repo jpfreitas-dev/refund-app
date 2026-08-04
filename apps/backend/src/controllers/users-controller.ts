@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { z } from 'zod';
+
 import { usersService } from '@/services/users-service';
 
 class UsersController {
@@ -24,7 +25,7 @@ class UsersController {
 
     await usersService.create(data);
 
-    response.status(201).json({ message: 'User created successfully' });
+    return response.status(201).json({ message: 'User created successfully' });
   }
 }
 
