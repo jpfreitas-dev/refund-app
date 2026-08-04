@@ -29,6 +29,7 @@ export function SignUp() {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
@@ -37,6 +38,7 @@ export function SignUp() {
 
     try {
       setIsLoading(true);
+      setErrorMessage(null);
 
       const data = signUpSchema.parse({
         name,
@@ -52,16 +54,16 @@ export function SignUp() {
       }
     } catch (error) {
       if (error instanceof ZodError) {
-        return alert(error.issues[0].message);
+        return setErrorMessage(error.issues[0].message);
       }
 
       if (error instanceof AxiosError) {
-        return alert(
+        return setErrorMessage(
           error.response?.data.message || 'Erro ao cadastrar usuário',
         );
       }
 
-      alert('Erro ao cadastrar usuário');
+      setErrorMessage('Erro ao cadastrar usuário');
     } finally {
       setIsLoading(false);
     }
@@ -100,6 +102,10 @@ export function SignUp() {
         placeholder="senha123"
         onChange={(e) => setPasswordConfirm(e.target.value)}
       />
+
+      <p className="text-sm text-red-600 text-center font-medium my-4">
+        {errorMessage}
+      </p>
 
       <Button type="submit" isLoading={isLoading}>
         Cadastrar

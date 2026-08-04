@@ -31,6 +31,7 @@ export function Refund() {
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [fileURL, setFileURL] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
@@ -44,9 +45,12 @@ export function Refund() {
 
     try {
       setIsLoading(true);
+      setErrorMessage(null);
 
       if (!file) {
-        return alert('Selecione um arquivo para enviar a solicitação');
+        return setErrorMessage(
+          'Selecione um arquivo para enviar a solicitação',
+        );
       }
 
       const fileUploadForm = new FormData();
@@ -68,14 +72,17 @@ export function Refund() {
       navigate('/confirm', { state: { fromSubmit: true } });
     } catch (error) {
       if (error instanceof ZodError) {
-        return alert(error.issues[0].message);
+        return setErrorMessage(error.issues[0].message);
       }
 
       if (error instanceof AxiosError) {
-        return alert(error.response?.data.message);
+        return setErrorMessage(
+          error.response?.data.message ||
+            'Ocorreu um erro ao enviar a solicitação',
+        );
       }
 
-      alert('Ocorreu um erro ao enviar a solicitação');
+      setErrorMessage('Ocorreu um erro ao enviar a solicitação');
     } finally {
       setIsLoading(false);
     }
@@ -85,6 +92,8 @@ export function Refund() {
     if (params.id) {
       async function fetchRefund() {
         try {
+          setErrorMessage(null);
+
           const { data } = await api.get<RefundAPIResponse>(
             `/refunds/${params.id}`,
           );
@@ -96,13 +105,13 @@ export function Refund() {
           setFile({ name: data.filename } as File);
         } catch (error) {
           if (error instanceof AxiosError) {
-            return alert(
+            return setErrorMessage(
               error.response?.data.message ||
                 'Ocorreu um erro ao buscar a solicitação',
             );
           }
 
-          return alert('Ocorreu um erro ao buscar a solicitação');
+          setErrorMessage('Ocorreu um erro ao buscar a solicitação');
         }
       }
 
@@ -116,6 +125,8 @@ export function Refund() {
     }
 
     try {
+      setErrorMessage(null);
+
       const { data } = await api.get(`/uploads/${fileURL}`, {
         responseType: 'blob',
       });
@@ -124,13 +135,13 @@ export function Refund() {
       window.open(fileBlobURL, '_blank');
     } catch (error) {
       if (error instanceof AxiosError) {
-        return alert(
+        return setErrorMessage(
           error.response?.data?.message ||
             'Ocorreu um erro ao abrir o comprovante',
         );
       }
 
-      alert('Ocorreu um erro ao abrir o comprovante');
+      setErrorMessage('Ocorreu um erro ao abrir o comprovante');
     }
   }
 
@@ -196,6 +207,10 @@ export function Refund() {
           onChange={(e) => e.target.files && setFile(e.target.files[0])}
         />
       )}
+
+      <p className="text-sm text-red-600 text-center font-medium">
+        {errorMessage}
+      </p>
 
       <Button type="submit" isLoading={isLoading}>
         {params.id ? 'Voltar' : 'Enviar solicitação'}

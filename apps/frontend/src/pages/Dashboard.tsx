@@ -17,6 +17,7 @@ const PER_PAGE = 2;
 export function Dashboard() {
   const [nameInput, setNameInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const [page, setPage] = useState(1);
   const [totalOfPages, _setTotalOfPages] = useState(0);
@@ -46,6 +47,8 @@ export function Dashboard() {
   useEffect(() => {
     async function fetchRefunds() {
       try {
+        setErrorMessage(null);
+
         const response = await api.get<RefundsPaginationAPIResponse>(
           `/refunds?name=${searchQuery}&page=${page}&perPage=${PER_PAGE}`,
         );
@@ -63,13 +66,13 @@ export function Dashboard() {
         _setTotalOfPages(response.data.pagination.totalPages);
       } catch (error) {
         if (error instanceof AxiosError) {
-          return alert(
+          return setErrorMessage(
             error.response?.data.message ||
               'Ocorreu um erro ao buscar as solicitações',
           );
         }
 
-        return alert('Ocorreu um erro ao buscar as solicitações');
+        setErrorMessage('Ocorreu um erro ao buscar as solicitações');
       }
     }
 
@@ -93,6 +96,12 @@ export function Dashboard() {
           <img src={searchSvg} alt="Ícone de pesquisar" />
         </Button>
       </form>
+
+      {errorMessage && (
+        <p className="text-sm text-red-600 text-center font-medium my-4">
+          {errorMessage}
+        </p>
+      )}
 
       <div className="my-6 flex flex-col gap-4 max-h-85.5 overflow-y-scroll">
         {refunds.map((item) => (
