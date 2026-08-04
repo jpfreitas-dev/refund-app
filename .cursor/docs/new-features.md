@@ -100,6 +100,26 @@ Notes for implementation:
 
 Exact package.json placement (root vs `apps/*`) decided in #12/#13; keep discoverable from the repo root when practical.
 
+## Tests
+
+From the repo root:
+
+```bash
+npm run test:api
+npm run test:e2e
+```
+
+- **API:** Vitest + Supertest against Express `app`; uses isolated `prisma/test.db` (no Docker required)
+- **E2E:** Playwright; starts backend + frontend via `webServer` when not already running (`reuseExistingServer` in dev)
+
+First-time E2E setup (Chromium browser):
+
+```bash
+npx playwright install chromium --workspace refund-web
+```
+
+Or from `apps/frontend`: `npx playwright install chromium`
+
 ## Docker (dev)
 
 From the repo root:
