@@ -62,7 +62,14 @@ class RefundsController {
         createdAt: 'desc',
       },
       include: {
-        user: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
       },
     });
 
@@ -100,7 +107,14 @@ class RefundsController {
     const refund = await prisma.refunds.findFirst({
       where: { id },
       include: {
-        user: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
       },
     });
 
