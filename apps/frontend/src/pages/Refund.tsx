@@ -110,6 +110,30 @@ export function Refund() {
     }
   }, [params.id]);
 
+  async function handleOpenReceipt() {
+    if (!fileURL) {
+      return;
+    }
+
+    try {
+      const { data } = await api.get(`/uploads/${fileURL}`, {
+        responseType: 'blob',
+      });
+
+      const fileBlobURL = URL.createObjectURL(data);
+      window.open(fileBlobURL, '_blank');
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return alert(
+          error.response?.data?.message ||
+            'Ocorreu um erro ao abrir o comprovante',
+        );
+      }
+
+      alert('Ocorreu um erro ao abrir o comprovante');
+    }
+  }
+
   return (
     <form
       onSubmit={onSubmit}
@@ -157,14 +181,14 @@ export function Refund() {
       </div>
 
       {params.id && fileURL ? (
-        <a
-          href={`http://localhost:3333/uploads/${fileURL}`}
-          target="_blank"
+        <button
+          type="button"
+          onClick={handleOpenReceipt}
           className="text-sm text-green-100 font-semibold flex items-center justify-center gap-2 my-6 hover:opacity-70 transition ease-linear"
         >
           <img src={fileSvg} alt="Ícone de arquivo" />
           Abrir comprovante
-        </a>
+        </button>
       ) : (
         <Upload
           legend="Comprovante"
