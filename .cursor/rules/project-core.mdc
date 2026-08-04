@@ -13,11 +13,10 @@ alwaysApply: true
 
 ## Scope
 
-- Portfolio foundation complete (service conventions, dev Docker Compose, API + E2E tests)
-- PostgreSQL via Prisma in dev, Docker, and API tests
-- No S3 and no new domain features (approve/reject, etc.)
-- Root README stays deferred until feature-complete
-- Prefer reviewable diffs aligned with [new-features.md](../docs/new-features.md)
+- Portfolio foundation: multi-method domain services, Docker Compose (postgres + backend + frontend), API + E2E tests
+- PostgreSQL via Prisma in local, Docker, and API tests (`refund_test`)
+- No S3 and no extra domain features (approve/reject, etc.) unless explicitly requested
+- Human-facing docs: root `README.md`; agent architecture detail: `.cursor/docs/architecture.md`
 
 ## Secrets & env
 

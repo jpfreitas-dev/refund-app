@@ -16,11 +16,11 @@ alwaysApply: true
 
 - Format: `type(scope): short imperative summary`
 - Examples: `fix(users): prevent self-assignment of manager role on signup`
-- One logical change per commit when following the phase plan
+- One logical change per commit
 - Do not commit unless the user asks (user rule for this project)
 
 ## PRs
 
 - Keep title aligned with the main intent (`chore:`, `fix:`, `refactor:`, `docs:`)
-- Prefer the Phase 3 sequence in `.cursor/docs/new-features.md` over ad-hoc large refactors
+- Prefer small, reviewable diffs over large unrelated refactors
 ---

@@ -26,5 +26,5 @@ alwaysApply: false
 ## Style
 
 - Match existing component and naming patterns
-- No new domain features unless the open Phase 3 PR explicitly requires them
+- Do not add new domain features unless explicitly requested
 ---
