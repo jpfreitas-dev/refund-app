@@ -91,7 +91,7 @@ URLs típicas:
 | --- | --- |
 | Docker (serviço backend) | `postgresql://refund:refund@postgres:5432/refund` |
 | Host local | `postgresql://refund:refund@localhost:5432/refund` |
-| Testes de API | `postgresql://refund:refund@localhost:5432/refund_test` |
+| Testes de API / E2E | `postgresql://refund:refund@localhost:5432/refund_test` |
 
 ## Scripts (raiz)
 
@@ -156,7 +156,7 @@ npm run test:e2e
 ```
 
 - **API:** setup aponta para `refund_test`, aplica migrations e limpa dados entre casos.
-- **E2E:** fluxos de login e criação de reembolso no frontend.
+- **E2E:** sobe API/frontend nas portas `3334`/`5174` usando `refund_test` (não o banco `refund` do Docker).
 
 ## Licença
 

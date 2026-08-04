@@ -5,6 +5,8 @@ apps/backend/.DS_Store
 apps/backend/generated/prisma
 apps/backend/tmp/**
 !apps/backend/tmp/uploads/.gitkeep
+apps/backend/prisma/*.db
+apps/backend/prisma/*.db-journal
 
 apps/frontend/node_modules
 apps/frontend/dist

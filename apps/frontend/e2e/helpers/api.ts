@@ -1,6 +1,6 @@
 import { expect, type APIRequestContext } from '@playwright/test';
 
-const API_URL = process.env.PLAYWRIGHT_API_URL ?? 'http://localhost:3333';
+const API_URL = process.env.PLAYWRIGHT_API_URL ?? 'http://localhost:3334';
 
 export async function createEmployee(
   request: APIRequestContext,

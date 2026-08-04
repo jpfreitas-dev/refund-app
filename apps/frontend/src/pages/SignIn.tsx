@@ -45,11 +45,7 @@ export function SignIn() {
   }
 
   return (
-    <form
-      className="w-full flex flex-col gap-4"
-      action={formAction}
-      method="post"
-    >
+    <form className="w-full flex flex-col gap-4" action={formAction}>
       <Input
         name="email"
         required
