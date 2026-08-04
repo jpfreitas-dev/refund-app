@@ -99,3 +99,16 @@ Notes for implementation:
 | `test:e2e`                              | Run Playwright E2E                  |
 
 Exact package.json placement (root vs `apps/*`) decided in #12/#13; keep discoverable from the repo root when practical.
+
+## Docker (dev)
+
+From the repo root:
+
+```bash
+npm run docker:up
+```
+
+- API: http://localhost:3333
+- Web: http://localhost:5173
+- Optional overrides: copy root `.env.example` to `.env`
+- Stop: `npm run docker:down`
