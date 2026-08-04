@@ -1,4 +1,6 @@
 import { Request, Response } from 'express';
+import path from 'node:path';
+import fs from 'node:fs';
 import z, { ZodError } from 'zod';
 
 import uploadConfig from '@/config/upload';
@@ -45,6 +47,22 @@ class UploadsController {
 
       throw error;
     }
+  }
+
+  async show(request: Request, response: Response) {
+    const paramsSchema = z.object({
+      filename: z.string().min(1),
+    });
+
+    const { filename } = paramsSchema.parse(request.params);
+    const safeFilename = path.basename(filename);
+    const filePath = path.join(uploadConfig.UPLOADS_FOLDER, safeFilename);
+
+    if (!fs.existsSync(filePath)) {
+      throw new AppError('Arquivo não encontrado', 404);
+    }
+
+    return response.sendFile(filePath);
   }
 }
 
