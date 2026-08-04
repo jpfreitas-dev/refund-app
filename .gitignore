@@ -11,6 +11,8 @@ apps/backend/tmp/**
 apps/frontend/node_modules
 apps/frontend/dist
 apps/frontend/.env
+apps/frontend/playwright-report
+apps/frontend/test-results
 
 .env
 
