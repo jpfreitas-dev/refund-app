@@ -1,7 +1,7 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 
 import { AuthContext } from './AuthContext';
-import { api } from '../services/api';
+import { api, setUnauthorizedHandler } from '../services/api';
 
 const LOCAL_STORAGE_KEYS = '@refund';
 
@@ -43,9 +43,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setSession(null);
     localStorage.removeItem(`${LOCAL_STORAGE_KEYS}:user`);
     localStorage.removeItem(`${LOCAL_STORAGE_KEYS}:token`);
-
-    window.location.assign('/');
+    delete api.defaults.headers.common['Authorization'];
   }
+
+  useEffect(() => {
+    setUnauthorizedHandler(() => {
+      removeUserFromLocalStorage();
+    });
+  }, []);
 
   return (
     <AuthContext.Provider

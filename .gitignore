@@ -4,6 +4,8 @@ apps/backend/.env
 apps/backend/.DS_Store
 apps/backend/generated/prisma
 apps/backend/prisma/dev.db
+apps/backend/tmp/**
+!apps/backend/tmp/uploads/.gitkeep
 
 apps/frontend/node_modules
 apps/frontend/dist
