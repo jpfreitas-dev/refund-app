@@ -4,6 +4,8 @@
   "description": "API desenvolvida para um sistema de reembolso",
   "main": "src/server.ts",
   "scripts": {
+    "build": "prisma generate",
+    "start": "tsx src/server.ts",
     "dev": "tsx watch src/server.ts",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -34,6 +36,7 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.2.0",
     "pg": "^8.16.0",
+    "tsx": "^4.19.2",
     "zod": "^3.24.1"
   },
   "devDependencies": {
@@ -50,7 +53,6 @@
     "prisma": "^7.9.0",
     "supertest": "^7.2.2",
     "ts-node": "^10.9.2",
-    "tsx": "^4.19.2",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.63.0",
     "vitest": "^4.1.10"
