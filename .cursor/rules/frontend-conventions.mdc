@@ -1,0 +1,30 @@
+---
+description: Frontend conventions for React + Vite SPA
+globs: apps/frontend/**
+alwaysApply: false
+---
+
+# Frontend conventions
+
+## Auth & session
+
+- Session/user state lives in Auth context (`context/`)
+- Read auth via `useAuth` (or existing hook); do not re-parse localStorage ad hoc in UI
+- Role-based routing stays in `routes/` (employee vs manager)
+
+## API
+
+- HTTP client: Axios in `services/api`
+- Base URL from env (`VITE_*`), not hardcoded hosts in components
+- Prefer centralized handling for 401 (interceptor) over per-page reloads/alerts
+
+## UX feedback
+
+- Prefer inline form/page error messages over `alert()`
+- Keep pages in `pages/`, reusable UI in `components/`
+
+## Style
+
+- Match existing component and naming patterns
+- No new domain features in Phase 2 refactors unless the open PR explicitly requires them
+---
