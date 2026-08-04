@@ -1,0 +1,13 @@
+**/node_modules
+**/.env
+**/.DS_Store
+.git
+.gitignore
+.cursor
+.husky
+apps/backend/dist
+apps/backend/prisma/dev.db
+apps/backend/tmp/**
+!apps/backend/tmp/uploads/.gitkeep
+apps/backend/generated
+apps/frontend/dist
