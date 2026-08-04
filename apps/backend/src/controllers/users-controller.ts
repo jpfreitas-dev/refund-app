@@ -21,13 +21,9 @@ class UsersController {
         .string()
         .trim()
         .min(6, { message: 'A senha deve ter pelo menos 6 caracteres' }),
-      role: z
-        .enum([UserRole.employee, UserRole.manager])
-        .optional()
-        .default(UserRole.employee),
     });
 
-    const { name, email, password, role } = bodySchema.parse(request.body);
+    const { name, email, password } = bodySchema.parse(request.body);
 
     const userWithSameEmail = await prisma.user.findUnique({
       where: { email },
@@ -44,7 +40,7 @@ class UsersController {
         name,
         email,
         password: hashedPassword,
-        role,
+        role: UserRole.employee,
       },
     });
 
