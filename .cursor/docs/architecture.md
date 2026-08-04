@@ -1,6 +1,6 @@
 # Architecture
 
-Target layout for the Refund monorepo (Phase 2 ends with a thin service layer; no Clean Architecture / modules packing).
+Target layout for the Refund monorepo: **flat folders** and **multi-method domain services** (no Clean Architecture / `modules/` packing).
 
 ## Backend (`apps/backend/src`)
 
@@ -11,7 +11,7 @@ src/
   middlewares/   # auth, authorization, error handling
   routes/        # Express routers
   controllers/   # Zod + HTTP adapters
-  services/      # business rules + Prisma (introduced in PR #8)
+  services/      # business rules + Prisma (one class per domain)
   utils/         # AppError, disk storage helpers
   types/         # Express ambient types
   app.ts
@@ -27,6 +27,13 @@ src/
 | **services** | Domain rules, Prisma, filesystem decisions that are not pure HTTP |
 | **middlewares** | Cross-cutting auth, roles, errors |
 | **config / lib / utils** | Shared config, client singleton, helpers |
+
+### Service convention (multi-method domain services)
+
+- One service file/class per domain: `refunds-service.ts` → `RefundsService`
+- Multiple public methods (`create`, `index`, `show`, …), not one file per use-case with a single `execute()`
+- Export a singleton: `export const refundsService = new RefundsService()`
+- Keep `controllers/`, `services/`, `routes/` flat — do not invent `modules/refunds/`
 
 ### Thin controller vs service (sketch)
 

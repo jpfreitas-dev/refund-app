@@ -6,13 +6,13 @@ Minimal project docs for agent context. Prefer **rules** (`.mdc`) for day-to-day
 
 | Doc | Inject when… | Skip when… |
 | --- | --- | --- |
-| [architecture.md](./architecture.md) | Reorganizing folders, extracting services, **creating an endpoint or page** and you want trees + layers | One-line bugfix, typo, pure CSS polish |
-| [phase-2-prs.md](./phase-2-prs.md) | Running or reviewing **which PR is next**, commit list, branch name | Generic coding outside Phase 2 |
+| [architecture.md](./architecture.md) | Reorganizing folders, extracting services, **creating an endpoint or page** and you want trees + layers | One-line bug fix, typo, pure CSS polish |
+| [new-features.md](./new-features.md) | Running or reviewing **Phase 3** (#11–#13): Docker DX, tests, service convention | Generic coding outside Phase 3 |
 
 ## Practical usage
 
-- PRs #6–#7, #9–#10: always-apply + glob rules are usually enough
-- **PR #8 (services):** `@.cursor/docs/architecture.md`
-- Branch switch / “what’s the next commit?”: `@.cursor/docs/phase-2-prs.md`
-- Do not inject both docs at once unless necessary (saves context)
+- Always-apply + glob rules are usually enough for small fixes
+- Service / layer work: `@.cursor/docs/architecture.md`
+- Phase 3 (Docker, API/E2E tests, portfolio foundation): `@.cursor/docs/new-features.md`
+- Do not inject multiple docs at once unless necessary (saves context)
 ---

@@ -11,11 +11,12 @@ alwaysApply: true
 - `apps/frontend` — React + Vite SPA
 - Do not invent a new monorepo tool; keep the current layout
 
-## Phase 2 scope
+## Phase 3 scope
 
-- Refactors, security hardening, config/env, docs, Cursor governance
-- No Docker, no new test suite, no Postgres/S3, no new domain features (approve/reject, etc.)
-- Prefer small, reviewable diffs aligned with the open PR sequence
+- Portfolio foundation — service convention docs, **dev-only Docker Compose**, **API (Supertest) + E2E (Playwright)**
+- No Postgres/S3 and no new domain features (approve/reject, etc.)
+- Root README stays deferred until post–Phase 3
+- Prefer reviewable diffs aligned with [new-features.md](../docs/new-features.md) (fewer, denser PRs)
 
 ## Secrets & env
 

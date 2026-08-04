@@ -22,5 +22,5 @@ alwaysApply: true
 ## PRs
 
 - Keep title aligned with the main intent (`chore:`, `fix:`, `refactor:`, `docs:`)
-- Prefer the Phase 2 sequence over ad-hoc large refactors
+- Prefer the Phase 3 sequence in `.cursor/docs/new-features.md` over ad-hoc large refactors
 ---

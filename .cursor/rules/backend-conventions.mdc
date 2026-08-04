@@ -8,10 +8,17 @@ alwaysApply: false
 
 ## Layers
 
-- Flow: `routes` → `controllers` → `services` (target) → Prisma via `lib/prisma`
+- Flow: `routes` → `controllers` → `services` → Prisma via `lib/prisma`
 - Controllers: Zod validation, HTTP status, call service; keep thin
 - Services: business rules and Prisma access; no `req`/`res`
 - Routes: mount handlers and middlewares only
+
+## Services (multi-method domain)
+
+- One service class per domain (`RefundsService`, `SessionsService`, …), multiple methods (`create`, `index`, `show`)
+- File: `kebab-case` + `-service.ts` (e.g. `refunds-service.ts`); export singleton instance
+- Do not split into one-file-per-use-case with a single `execute()` unless explicitly requested
+- Keep folders flat under `src/`; do not invent `modules/<domain>/`
 
 ## Errors & auth
 
@@ -23,10 +30,10 @@ alwaysApply: false
 ## Uploads & static files
 
 - Upload config lives under `config/`; disk helpers under `utils/`
-- Protected file access should require authentication (Phase 2 security work)
+- Protected file access should require authentication
 
 ## Style
 
-- Match existing file naming (`kebab-case` controllers, routes, middlewares)
+- Match existing file naming (`kebab-case` controllers, routes, middlewares, services)
 - Prefer flat folders under `src/` over inventing `modules/`
 ---
