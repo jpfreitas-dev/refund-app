@@ -9,6 +9,11 @@ import { uploadsRoutes } from './uploads-routes';
 
 const routes = Router();
 
+// This route is used to check if the server is running, it returns a 200 status code and a JSON object with the status 'ok'
+routes.get('/health', (_request, response) => {
+  response.status(200).json({ status: 'ok' });
+});
+
 // Public routes
 routes.use('/users', usersRoutes);
 routes.use('/sessions', sessionsRoutes);
